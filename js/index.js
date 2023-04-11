@@ -90,7 +90,7 @@ class ProductManager {
     }
   };
 }
-const adder = new ProductManager("./products.json");
+const adder = new ProductManager("../Json/products.json");
 adder.getProducts().then((products) => {
   console.log(products);
 });
