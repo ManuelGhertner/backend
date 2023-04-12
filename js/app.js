@@ -7,7 +7,7 @@ const server = express();
 
 server.get("/products",  (req, res)=>{
     const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
-    const products = limit ? data.slice(0,limit) : [];
+    const products = limit ? data.slice(0,limit) : data;
     res.send(products)
 
 });
