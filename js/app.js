@@ -1,26 +1,14 @@
 const express = require ("express");
-const data = require ("../Json/products.json")
+const router = require ("../routes/products.routes");
+const router2 = require ("../routes/carts.routes");
+// const data = require ("../products.json");
 const PUERTO = 8080;
 
 const server = express();
-
-
-server.get("/products",  (req, res)=>{
-    const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
-    const products = limit ? data.slice(0,limit) : data;
-    res.send(products)
-
-});
-
-server.get("/products/:pid", (req,res) =>{
-    const id = parseInt(req.params.pid);
-    const product = data.find(product => product.id === id );
-    if(product){
-        res.send(product);
-    }   else {
-        res.status(404).send('Producto no encontrado');
-      }
-})
+server.use(express.json());
+server.use(express.urlencoded({extended: true}));
+server.use("/api",router);
+server.use("/api",router2);
 
 server.listen(PUERTO, () =>{
     console.log("servidor express activo");
