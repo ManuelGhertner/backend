@@ -1,0 +1,35 @@
+<div class="container-fluid">
+    <div class="row">
+        <header class="bg-success text-white p-3" style="height: 25vh;">
+            <h1><b>Bienvenido al sistema de productos</b></h1>
+        </header>
+    </div>
+    <div class="row">
+        <ul>
+            {{#each products}}
+            <li>
+                <ul>
+                    <li>id: {{id}}</li>
+                    <li>title: {{title}}</li>
+                    <li>description: {{description}}</li>
+                    <li>code: {{code}}</li>
+                    <li>price: {{price}}</li>
+                    <li>status: {{status}}</li>
+                    <li>stock: {{stock}}</li>
+                    <li>thumbnail: {{thumbnail}}</li>
+                </ul>
+            </li>
+            {{/each}}
+        </ul>
+
+    </div>
+    {{!-- <script src="/socket.io/socket.io.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+    <script>
+        const wsc = io("ws://http://localhost:8080");
+        wsc.emit("Cliente 1 intentando conectar");
+        wsc.on("confirm", (data) => {
+            console.log(data);
+        })
+    </script>
+</div>

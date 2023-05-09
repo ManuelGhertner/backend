@@ -1,8 +1,10 @@
-const express = require("express");
+// const express = require("express");
+import {Router} from "express";
 
-const data = require("../products.json");
-const CartManager = require ("../js/indexCarts")
-const router = express.Router();
+// const data = require("../products.json");
+// const CartManager = require ("../js/indexCarts")
+import CartManager from "../js/indexCarts.js";
+const router = Router();
 
 
 const cartManager = new CartManager("../js/carts.json");
@@ -10,7 +12,7 @@ const cartManager = new CartManager("../js/carts.json");
 router.post("/carts", async (req, res) => {
   const {products} = req.body;
   try{
-    const cart = await cartManager.addCart(products);
+    const cart = await cartManager.addCart();
     res.status(201).send(cart);
   } catch (error){
     console.log(error);
@@ -54,8 +56,8 @@ router.post ("/:cid/product/:pid", async (req, res) =>{
 });
 
 
-module.exports = router;
-
+// module.exports = router;
+export default router;
 
 // let idUnico = carts.length + 101;
 

@@ -1,4 +1,5 @@
-const fs = require("fs");
+// const fs = require("fs");
+import fs from "fs";
 class ProductManager {
   static newCode = 0;
   static newId = 0;
@@ -7,7 +8,7 @@ class ProductManager {
     this.path = path;
   }
 
-  addProduct = async (title, description, price, thumbnail, stock) => {
+  addProduct = async (title, description, price, thumbnail, stock, status) => {
     ProductManager.newCode++;
     ProductManager.newId++;
     let newCode = ProductManager.newCode;
@@ -19,13 +20,14 @@ class ProductManager {
       }
     });
 
-    if (title && description && price && thumbnail && stock) {
+    if (title && description && price && thumbnail && stock && status) {
       if (codeUnico) {
         const newProduct = {
-          id: ProductManager.newId,
+          id: parseInt(ProductManager.newId),
           title: title,
           description: description,
           price: price,
+          status: status,
           thumbnail: thumbnail,
           code: `CODE${ProductManager.newCode}`,
           stock: stock,
@@ -194,5 +196,5 @@ class ProductManager {
 // });
 // adder.getProductById(1);
 // adder.deleteProduct(1);
-
-module.exports = ProductManager;
+export default ProductManager;
+// module.exports = ProductManager;

@@ -1,6 +1,6 @@
 
-const fs = require("fs");
-
+// const fs = require("fs");
+import fs from "fs";
 class CartManager {
     static idUnico = 100;
     constructor(path) {
@@ -16,7 +16,7 @@ class CartManager {
       }
       this.carts.push(cart);
       this.idUnico++;
-      await fs.writeFile("carts.json", JSON.stringify(this.carts), err =>{
+      await fs.promises.writeFile("carts.json", JSON.stringify(this.carts), err =>{
         if (err) throw err;
         console.log("Se actualizaron los carritos");
       });
@@ -90,9 +90,9 @@ try {
   
 }
 
+export default CartManager;
   
-  
-  module.exports = CartManager;
+//   module.exports = CartManager;
   
 
     // try {

@@ -1,7 +1,6 @@
-const express = require("express");
-const data = require("../products.json");
-const router = express.Router();
-const ProductManager = require ("../js/index")
+import {Router} from "express";
+const router = Router();
+import ProductManager from "../js/index.js";
 
 const productManager = new ProductManager("../products.json");
 
@@ -15,12 +14,23 @@ const productManager = new ProductManager("../products.json");
 //   "stock",
 //   "thumbnail",
 // ];
+
+// const pepe = [{
+//   id: "1",
+//   title: "1",
+//   description: "1",
+//  code: "1",
+//   price: "1",
+//   status: "1",
+//   stock: "1",
+//   thumbnail: "1"
+// }]
 router.get("/products", async (req, res) => {
 
 try {
  const products = await productManager.getProducts();
 //  console.log(products);
-  res.status(200).send(products);
+  res.render("index", {products});
 }catch (error){
    res.status(500).send("Internal server error");
 }
@@ -47,29 +57,13 @@ router.get("/products/:pid", async (req, res) => {
 });
 
 router.post("/products", async (req, res) => {
-  const { title, description, price, thumbnail, stock } = req.body;
+  const { title, description, price, thumbnail, stock, status } = req.body;
   try {
-    await productManager.addProduct(title, description, price, thumbnail, stock);
+    await productManager.addProduct(title, description, price, thumbnail, stock, status);
     res.status(200).send({ status: 'OK', mensaje: 'producto agregado' });
   } catch (error) {
     res.status(400).send({ status: 'error', mensaje: 'No se pudo agregar el producto' });
   }
-  // const newProduct = req.body;
-  // const verificarCampos = (newProduct, obligatorios) => {
-  //   const keys = Object.keys(newProduct);
-  //   return obligatorios.every((val) => keys.includes(val));
-  // };
-
-  // if (verificarCampos(newProduct, requeridos)) {
-  //   newProduct.id = idUnico;
-  //   data.push(newProduct);
-  //   idUnico++;
-  //   res.status(200).send({ status: "OK", mensaje: "producto agregado" });
-  // } else {
-  //   res
-  //     .status(400)
-  //     .send({ status: "error", mensaje: "Faltan campos obligatorios" });
-  // }
 }),
   router.put("/products/:pid", async(req, res) => {
     const id = parseInt(req.params.pid);
@@ -85,21 +79,6 @@ router.post("/products", async (req, res) => {
     } catch (error){
       res.status(500).send("Internal server error 3")
     }
-
-
-
-
-
-    // const index = data.findIndex((product) => product.id === id);
-
-    // if (index !== -1) {
-    //   const product = data[index];
-    //   const updatedProduct = { ...product, ...req.body, id: product.id };
-    //   data[index] = updatedProduct;
-    //   res.status(200).send(updatedProduct);
-    // } else {
-    //   res.status(404).send("Producto no encontrado");
-    // }
   });
 
 router.delete("/products/:pid", async (req, res) => {
@@ -112,22 +91,9 @@ try {
   res.status(404).send("Producto no encontrado");
 }
 
-
-
-  // const index = data.findIndex((product) => product.id === id);
-
-  // if (index !== -1) {
-  //   data.splice(index, 1);
-  //   res.status(200).send("Producto eliminado");
-  // } else {
-  //   res.status(404).send("Producto no encontrado");
-  // }
 });
 
-module.exports = router;
+export default router;
 
-
-  // const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
-  // const products = limit ? data.slice(0, limit) : data;
 
   
