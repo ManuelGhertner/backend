@@ -1,30 +1,9 @@
 import {Router} from "express";
 const router = Router();
-import ProductManager from "../js/index.js";
-
+import ProductManager from "../indexProducts.js";
+console.log(process.cwd());
 const productManager = new ProductManager("../products.json");
 
-// let idUnico = data.length + 1;
-// const requeridos = [
-//   "title",
-//   "description",
-//   "code",
-//   "price",
-//   "status",
-//   "stock",
-//   "thumbnail",
-// ];
-
-// const pepe = [{
-//   id: "1",
-//   title: "1",
-//   description: "1",
-//  code: "1",
-//   price: "1",
-//   status: "1",
-//   stock: "1",
-//   thumbnail: "1"
-// }]
 router.get("/products", async (req, res) => {
 
 try {

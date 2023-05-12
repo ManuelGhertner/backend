@@ -25,11 +25,27 @@
     </div>
     {{!-- <script src="/socket.io/socket.io.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+    <script src="../public/index.js"></script>
     <script>
-        const wsc = io("ws://http://localhost:8080");
+
+          const socket = io();
+wsc.emit("Cliente 1 intentando conectar");
+wsc.on("confirm", (data) =>{
+    console.log(data);
+})
+    </script>
+</div>
+
+{{!-- 
+      const wsc = io("ws://http://localhost:8080");
         wsc.emit("Cliente 1 intentando conectar");
         wsc.on("confirm", (data) => {
             console.log(data);
-        })
-    </script>
-</div>
+        }) --}}
+
+
+
+
+{{!-- 
+  const wsc = io("ws://http//localhost:8080");
+  wsc.emit("event_c101","Cliente 1 intendando conectar"); --}}

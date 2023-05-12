@@ -92,35 +92,3 @@ try {
 
 export default CartManager;
   
-//   module.exports = CartManager;
-  
-
-    // try {
-    //     const data = await fs.promises.readFile(this.path, "utf-8");
-    //     this.carts = JSON.parse(data);
-    //     const cart = this.carts.find((cart) => cart.id === cartId);
-    //     if(!cart){
-    //         return null;
-    //     };
-    //     const productIndex = cart.products.findIndex((p) => p.product === productId);
-    //     if (productIndex === -1) {
-    //         const product = this.data.find((p) => p.id === productId);
-    //         if(!product){
-    //             return null;
-    //         } else {
-    //             const quantity = 1;
-    //             const productoAgregado = {product: product.id, quantity: quantity};
-    //             cart.products.push(productoAgregado);
-    //             await fs.promises.writeFile(this.path, JSON.stringify(this.carts));
-    //             return {status: "OK", mensaje: "Producto Agregado"};
-    //         } 
-
-    //     } else {
-    //         cart.products[productIndex].quantity +=1;
-    //         await fs.promises.writeFile(this.path, JSON.stringify(this.carts));
-    //         return { status: "OK", mensaje: "Cantidad incrementada en 1"};
-    //     }
-    // } catch (error){
-    //     console.log(error); 
-    //     throw error;
-    // }
