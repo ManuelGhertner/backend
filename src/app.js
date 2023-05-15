@@ -1,7 +1,7 @@
 import express from "express";
-import router from "./routes/products.routes.js";
-import router2 from "./routes/carts.routes.js";
-import { __dirname } from "../utils.js";
+import router from "../src/routes/products.routes.js";
+import router2 from "../src/routes/carts.routes.js";
+import { __dirname } from "./utils.js";
 import { engine } from "express-handlebars"
 import { Server } from "socket.io";
 const PUERTO = 3000;
