@@ -23,24 +23,65 @@
         </ul>
 
     </div>
+
+    <div class="row">
+        <div>
+            <input type="text" id="chatBox">
+        </div>
+        <div>
+            <p id="messagesLog"></p>
+        </div>
+    </div>
+
     {{!-- <script src="/socket.io/socket.io.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
-    <script src="../public/js/index.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{!-- <script src="../public/js/index.js"></script> --}}
     <script>
-          const wsc = io("ws://http://localhost:8080");
-        wsc.emit("Cliente 1 intentando conectar");
-        wsc.on("confirm", (data) => {
-            console.log(data);
+        const socket = io("ws://localhost:8080");
+
+        let user;
+        const chatBox = document.getElementById("chatBox");
+        const messagesLog = document.getElementById("messagesLog");
+
+        chatBox.addEventListener("keyup", (event) => {
+            if(event.key === "Enter" && chatBox.value.trim().length > 0){
+                    socket.emit("new_message",{user:user, msg:chatBox.value});
+                 
+            }
         })
+        socket.on("msg_received", (data) =>{
+            messagesLog.innerHTML = `${messagesLog.innerHTML}<br>(${data.user}) ${data.msg}`;
+            console.log("mensaje recibido");
+            console.log(data);
+        } )
+   
+
+        const swalConfig = {
+            title: "identificacion",
+            text: "Indique usuario",
+            input: "text",
+            inputValidator: (val) =>{
+                return !val && "Por favor especifique usuario";
+            },
+            allowOutsideClick: false
+        }
+
+        Swal.fire(swalConfig).then((res)=>{
+            user = res.value;
+            console.log(user);
+       
+        });
+
+ 
+
     </script>
 </div>
 
 
-    
-
-
-
-
-{{!-- 
-  const wsc = io("ws://http//localhost:8080");
-  wsc.emit("event_c101","Cliente 1 intendando conectar"); --}}
+         {{!-- socket.on("connect", () => {
+              socket.emit("event_c101","Cliente 1 intentando conectar");
+              socket.on("server_confirm", (msg) => {
+                console.log(msg);
+              })
+        }) --}}

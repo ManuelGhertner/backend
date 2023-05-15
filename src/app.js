@@ -11,7 +11,7 @@ const server = express();
 const httpServer = server.listen(WSPUERTO, () =>{
     console.log(`Servidor socketio activo en ${WSPUERTO}`);
 })
-const wss = new Server(httpServer);
+const io = new Server(httpServer, {cors: {origin: "http://localhost:3000"}});
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
 server.use("/api",router);
@@ -27,10 +27,18 @@ server.listen(PUERTO, () =>{
     console.log(`servidor express activo ${PUERTO}`);
 })
 
-wss.on("connection", (socket) =>{
-    console.log("Nuevo cliente conectado"+ socket.id);
-    // socket.on("event_c101", (data) =>{
+io.on("connection", (socket) =>{
+    console.log(`Nuevo cliente conectado (${socket.id})`);
+    socket.emit("server_confirm","conexion recibida");
+    socket.on("disconnect", (reason) =>{
+        console.log(`Cliente desconectado (${socket.id}) : ${reason}`);
+    // socket.on("event_c101", (data) => {
     //     console.log(data);
-    //     socket.emit("confirm", "conexion de cliente recibida")
-    // })
+    // })    
+    // socket.emit("event_c101", "Cliente intentando conectarse");
+    });
+    socket.on("new_message", (data)=>{
+        console.log(data);
+        io.emit("msg_received",data);
+    });
 })
