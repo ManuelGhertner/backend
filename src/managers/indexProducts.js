@@ -1,5 +1,5 @@
-// const fs = require("fs");
 import fs from "fs";
+// import productModel from "./products.model";
 class ProductManager {
   static newCode = 0;
   static newId = 0;
@@ -21,6 +21,9 @@ class ProductManager {
     });
 
     if (title && description && price && thumbnail && stock && status) {
+
+      // const lastId = await productModel.findOne({},{id:1}).sort({id: -1});
+      // await productModel.create({id: lastId.id + 1, ...product})
       if (codeUnico) {
         const newProduct = {
           id: parseInt(ProductManager.newId),
@@ -62,6 +65,7 @@ class ProductManager {
 
   getProducts = async () => {
     const products = await fs.promises.readFile(this.path, "utf-8");
+    // const products = await productModel.find();
     return JSON.parse(products);
   };
 
