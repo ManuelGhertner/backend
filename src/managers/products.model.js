@@ -11,7 +11,8 @@ price: Number,
 status: String, //verificar
 thumbnail: String,
 code: String,
-stock: Number
+stock: Number,
+category: String
 });
 schema.plugin(mongoosePaginate);
 

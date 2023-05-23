@@ -15,14 +15,30 @@ routerDb.get("/products_index", async (req, res) => {
     });
 });
 
-routerDb.get("/products", async (req, res) => {
+routerDb.get("/products/:pid?", async (req, res) => {
     try {
-        const products = await manager.getProducts();
-        res.status(200).send({ status: 'OK', data: products });
+        const page = req.params.pid || 1;
+        const options = {
+            limit: 3,
+            page: page
+        };
+
+        const products = await productModel.paginate({}, options);
+
+        const prevLink = products.hasPrevPage ? `/products/${products.prevPage}` : null;
+        const nextLink = products.hasNextPage ? `/products/${products.nextPage}` : null;
+
+        res.status(200).send({
+            status: 'OK',
+            data: products,
+            prevLink: prevLink,
+            nextLink: nextLink
+        });
     } catch (err) {
-        res.status(500).send({ status: 'ERR', error: err });
+        res.status(500).send({ status: 'ERR', error: err.message });
     }
 });
+
 
 
 routerDb.get("/products/sort/:sid?", async (req, res) => {
@@ -68,11 +84,24 @@ routerDb.get("/products/query/:qid?", async (req, res) => {
     }
 });
 
+routerDb.get("/products/query/category/:qcid?", async (req, res) => {
+    try {
+        const categoryId = req.params.qcid;
 
+        const query = { category: categoryId };
 
+        const products = await productModel.paginate(query, {limit:2, page: 1});
 
+        if (products.length === 0) {
+            res.status(404).send({ status: 'ERR', message: 'No se encontraron productos en la categoría especificada' });
+            return;
+        }
 
-
+        res.status(200).send({ status: 'OK', data: products });
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', error: err.message });
+    }
+});
 
 routerDb.post("/products", async (req, res) => {
     try {
