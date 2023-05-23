@@ -1,8 +1,9 @@
 import {} from "dotenv/config";
 import express from "express";
 import routerDb from "./routes/products.routes.db.js";
+import routerDbcarts from "./routes/carts.routes.db.js";
 // import router from "../src/routes/products.routes.js";
-import router2 from "../src/routes/carts.routes.js";
+// import router2 from "../src/routes/carts.routes.js";
 import { __dirname } from "./utils.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
@@ -27,8 +28,7 @@ const io = new Server(httpServer, {
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use("/api", routerDb);
-server.use("/api", router2);
-// server.use("/api", routerDb) //router para mongoose
+server.use("/api", routerDbcarts);
 server.use("/public", express.static(`${__dirname}/public`));
 
 server.engine("handlebars", engine());

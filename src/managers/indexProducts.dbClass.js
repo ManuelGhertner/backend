@@ -60,6 +60,7 @@ class Products {
             this.statusMsg = `getProductById : ${err}`
         }
     };
+    
     updateProduct = async (id, data) =>{
         try{
             if(data === undefined || Object.keys(data).length === 0){
