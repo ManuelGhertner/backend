@@ -12,7 +12,8 @@ status: String, //verificar
 thumbnail: String,
 code: String,
 stock: Number,
-category: String
+category: String,
+quantity: { type: Number, default: 1 }
 });
 schema.plugin(mongoosePaginate);
 

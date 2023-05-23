@@ -17,13 +17,13 @@ routerDbcarts.post("/carts", async (req, res) => {
   }
  
 });
-routerDbcarts.post ("/:cid/product/:pid", async (req, res) =>{
-  const cartId = parseInt(req.params.cid);
-  const productId = parseInt(req.params.pid);
-  try{
+routerDbcarts.post("/:cid/product/:pid", async (req, res) => {
+  const cartId = (req.params.cid);
+  const productId = (req.params.pid);
+  try {
     await manager.addProductToCart(cartId, productId);
-    res.status(200).send({ status: 'OK', msg: manager.showStatusMsg() });
-  }catch (error){
+    res.status(200).send({ status: 'OK', message: manager.showStatusMsg() });
+  } catch (error) {
     res.status(400).send({ status: 'ERR', error: manager.showStatusMsg() });
   }
 });
