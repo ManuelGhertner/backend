@@ -13,7 +13,6 @@ thumbnail: String,
 code: String,
 stock: Number,
 category: String,
-quantity: { type: Number, default: 1 }
 });
 schema.plugin(mongoosePaginate);
 

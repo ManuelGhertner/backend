@@ -17,7 +17,7 @@ routerDbcarts.post("/carts", async (req, res) => {
   }
  
 });
-routerDbcarts.post("/:cid/product/:pid", async (req, res) => {
+routerDbcarts.post("/carts/:cid/product/:pid", async (req, res) => {
   const cartId = (req.params.cid);
   const productId = (req.params.pid);
   try {
@@ -62,8 +62,38 @@ routerDbcarts.get("/:cid", async (req, res)=>{
     }
 });
 
+routerDbcarts.delete("/:cid/product/:pid", async (req, res) => {
+  try {
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
 
+    const result = await manager.deleteProductFromCart(cartId, productId);
 
+    if (result.status === "OK") {
+      res.status(200).send({ status: "OK", message: result.message });
+    } else {
+      res.status(400).send({ status: "ERROR", message: result.message });
+    }
+  } catch (error) {
+    res.status(500).send({ status: "ERROR", error: error.message });
+  }
+});
+
+routerDbcarts.delete("/:cid", async (req, res) => {
+  try {
+    const cartId = req.params.cid;
+    
+    const result = await manager.deleteAllProductsFromCart(cartId);
+
+    if (result.status === "OK") {
+      res.status(200).json({ status: "OK", message: result.message });
+    } else {
+      res.status(400).json({ status: "ERROR", message: result.message });
+    }
+  } catch (error) {
+    res.status(500).json({ status: "ERROR", error: error.message });
+  }
+});
 export default routerDbcarts;
 
 

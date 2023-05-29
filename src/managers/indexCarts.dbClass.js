@@ -35,7 +35,7 @@ class Carts {
   };
   getCarts = async () => {
     try {
-      const carts = await cartModel.find().populate('products');
+      const carts = await cartModel.find().populate('products.idProduct');
       this.status = 1;
       return carts;
     } catch (err) {
@@ -58,44 +58,59 @@ class Carts {
     }
   };
   getCartsById = async (cartId) => {
-    const cart = await cartModel.findOne({ id: cartId });
+    const cart = await cartModel.findById(cartId).populate("products.idProduct");
     if (!cart) {
       return null;
     } else {
-      //   const products = await cart.populate("products");
       return cart;
     }
   };
 //   
 
+
 addProductToCart = async (cartId, productId) => {
+  try {
+    const product = await productModel.findById(productId);
+
+    if (!product) {
+      return { status: "ERROR", message: "El producto no existe" };
+    }
+
+    const cart = await cartModel.findById(cartId)
+    let flag = false
+    cart.products.forEach( async p => {
+      if (p.idProduct.toString() === productId && !flag) {
+      p.quantity++
+      flag = true
+      await cart.save()
+    }
+  })
+  if(flag){
+    return { status: "OK", message: "Aumento de cantidad" }
+  }
+
+    cart.products.push({idProduct: productId})
+
+    await cart.save()
+    return { status: "OK", message: "Producto agregado al carrito" };
+  } catch (error) {
+    throw error;
+  }
+};
+
+  deleteAllProductsFromCart = async (cartId) => {
     try {
-      const cart = await cartModel.findById(cartId);
+      const cart = await cartModel.findByIdAndUpdate(cartId, { products: [] });
   
       if (!cart) {
         return { status: "ERROR", message: "El carrito no existe" };
       }
   
-      const product = await productModel.findById(productId);
-  
-      if (!product) {
-        return { status: "ERROR", message: "El producto no existe" };
-      }
-    //   const isProductAlreadyInCart = cart.products.some((item) => item.product.toString() === productId.toString());
-
-    //   if (isProductAlreadyInCart) {
-    //     return { status: "ERROR", message: "El producto ya existe en el carrito" };
-    //   }
-  
-  
-      cart.products.push(product);
-      await cart.save();
-  
-      return { status: "OK", message: "Producto agregado al carrito" };
+      return { status: "OK", message: "Todos los productos eliminados del carrito" };
     } catch (error) {
       throw error;
     }
-  }
+  };
 }
 
 export default Carts;
