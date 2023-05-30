@@ -111,6 +111,23 @@ routerDbcarts.put("/carts/:cid/product/:pid", async (req, res) => {
     res.status(500).json({ message: "Error al actualizar la cantidad", error });
   }
 });
+
+routerDbcarts.put("/carts/:cid", async (req, res) => {
+  try {
+    const cartId = req.params.cid;
+    const newProducts = req.body.products;
+
+    const updatedCart = await manager.updateCart(cartId, newProducts);
+
+    if (updatedCart) {
+      res.status(200).json({ message: "Carrito actualizado correctamente" });
+    } else {
+      res.status(404).json({ message: "No se encontró el carrito" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar el carrito", error });
+  }
+});
 export default routerDbcarts;
 
 

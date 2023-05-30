@@ -81,7 +81,20 @@ class Carts {
       return false; 
     }
   }
-//   
+   updateCart = async(cartId, newProducts) => {
+    try {
+      const updatedCart = await cartModel.findByIdAndUpdate(
+        cartId,
+        { products: newProducts },
+        { new: true }
+      );
+
+      return updatedCart;
+    } catch (error) {
+      console.error("Error al actualizar el carrito:", error);
+      return null;
+    }
+  }
 
 
 addProductToCart = async (cartId, productId) => {
