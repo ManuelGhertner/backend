@@ -25,15 +25,20 @@ routerDb.get("/products/:pid?", async (req, res) => {
 
         const products = await productModel.paginate({}, options);
 
-        const prevLink = products.hasPrevPage ? `/products/${products.prevPage}` : null;
-        const nextLink = products.hasNextPage ? `/products/${products.nextPage}` : null;
+        const prevLink = products.hasPrevPage ? `/api/products/${products.prevPage}` : null;
+        const nextLink = products.hasNextPage ? `/api/products/${products.nextPage}` : null;
 
-        res.status(200).send({
-            status: 'OK',
-            data: products,
+        // res.status(200).send({
+        //     status: 'OK',
+        //     data: products,
+        //     prevLink: prevLink,
+        //     nextLink: nextLink
+        // });
+        res.render("products", {
+            products: products.docs.map(product => product.toObject()),
             prevLink: prevLink,
             nextLink: nextLink
-        });
+          });
     } catch (err) {
         res.status(500).send({ status: 'ERR', error: err.message });
     }

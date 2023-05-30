@@ -52,17 +52,17 @@ routerDbcarts.delete("/carts/:id", async (req, res) => {
     }
 });
 
-routerDbcarts.get("/:cid", async (req, res)=>{
+routerDbcarts.get("/carts/:cid", async (req, res)=>{
     try {
-        const cartId = parseInt(req.params.cid);
+        const cartId = req.params.cid;
         const carts = await manager.getCartsById(cartId);
-        res.status(200).json(carts);
+        res.render("carts",{carts})
     } catch (err) {
         res.status(500).send({ status: 'err', error: err });
     }
 });
 
-routerDbcarts.delete("/:cid/product/:pid", async (req, res) => {
+routerDbcarts.delete("/carts/:cid/product/:pid", async (req, res) => {
   try {
     const cartId = req.params.cid;
     const productId = req.params.pid;
@@ -92,6 +92,23 @@ routerDbcarts.delete("/:cid", async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ status: "ERROR", error: error.message });
+  }
+});
+routerDbcarts.put("/carts/:cid/product/:pid", async (req, res) => {
+  try {
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+    const newQuantity = req.body.quantity;
+
+    const actualizacionExitosa = await manager.updateQuantity(cartId, productId, newQuantity);
+
+    if (actualizacionExitosa) {
+      res.status(200).json({ message: "Cantidad actualizada correctamente" });
+    } else {
+      res.status(500).json({ message: "Error al actualizar la cantidad" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar la cantidad", error });
   }
 });
 export default routerDbcarts;

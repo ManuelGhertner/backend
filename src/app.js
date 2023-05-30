@@ -34,6 +34,7 @@ server.use("/public", express.static(`${__dirname}/public`));
 server.engine("handlebars", engine());
 server.set("view engine", "handlebars");
 server.set("views", `${__dirname}/views`);
+// server.use("/products", routerDb)
 
 try {
   await mongoose.connect(MONGOOSE_URL);//si pongo el .env como dice el profesor en el raiz, no funciona, funciona si lo pongo tal como esta
