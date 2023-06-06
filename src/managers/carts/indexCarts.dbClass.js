@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import cartModel from "./carts.model.js";
-import productModel from "./products.model.js";
+import productModel from "../products/products.model.js";
 class Carts {
   static idUnico = 100;
   constructor() {

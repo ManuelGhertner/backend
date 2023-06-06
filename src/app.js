@@ -2,6 +2,8 @@ import {} from "dotenv/config";
 import express from "express";
 import routerDb from "./routes/products.routes.db.js";
 import routerDbcarts from "./routes/carts.routes.db.js";
+import routerDbusers from "./routes/users.routes.db.js";
+
 // import router from "../src/routes/products.routes.js";
 // import router2 from "../src/routes/carts.routes.js";
 import { __dirname } from "./utils.js";
@@ -10,8 +12,14 @@ import { Server } from "socket.io";
 import http from "http";
 import mongoose from "mongoose";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+// import FileStore from "session-file-store";
+import MongoStore from "connect-mongo";
+import userRoutes from "./routes/users.routes.db.js";
 const PUERTO = parseInt(process.env.PORT) || 3000;
 const MONGOOSE_URL = process.env.MONGOOSE_URL;
+const COOKIE_SECRET = "CODIGOSECRETO";
 const WSPUERTO = 8080;
 
 const server = express();
@@ -29,8 +37,20 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use("/api", routerDb);
 server.use("/api", routerDbcarts);
-server.use("/public", express.static(`${__dirname}/public`));
+server.use("/api", routerDbusers(io));
 
+server.use("/public", express.static(`${__dirname}/public`));
+server.use(cookieParser());
+// const fileStorage = FileStore(session);
+// const store = new fileStorage ({path: `${__dirname}/sessions`, ttl: 3600, retries: 0});
+const store = MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl:60});
+server.use(session({
+  store : store,
+  secret: COOKIE_SECRET,
+  resave: false,
+  saveUninitialized: false
+}))
+// server.use("/api", routerDbusers);
 server.engine("handlebars", engine());
 server.set("view engine", "handlebars");
 server.set("views", `${__dirname}/views`);

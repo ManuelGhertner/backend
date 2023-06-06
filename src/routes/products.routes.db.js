@@ -1,6 +1,6 @@
 import {Router} from "express";
-import Products from "../managers/indexProducts.dbClass.js";
-import productModel from "../managers/products.model.js";
+import Products from "../managers/products/indexProducts.dbClass.js";
+import productModel from "../managers/products/products.model.js";
 // import routerDb from "./products.routes";
 
 const routerDb = Router();
@@ -150,6 +150,16 @@ routerDb.delete("/products/:id", async (req, res) => {
     }
 });
 
-// }
+// cookies prueba
+
+routerDb.get("/setcookie", (req, res) =>{
+    try{
+        res.cookie("Cookie1", "esta es una cookie", {maxAge: 60000})
+        res.status(200).send({ status: "OK", data: "Cookie generada"});
+    } catch (err){
+        res.status(500).send({status: "ERR", error: err.message});
+    }
+
+})
 
 export default routerDb;

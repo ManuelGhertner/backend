@@ -1,6 +1,6 @@
 
 import {Router} from "express";
-import Carts from "../managers/indexCarts.dbClass.js";
+import Carts from "../managers/carts/indexCarts.dbClass.js";
 const routerDbcarts = Router();
 const manager = new Carts();
 
