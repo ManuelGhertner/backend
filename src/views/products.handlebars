@@ -5,7 +5,17 @@
 </head>
 <body>
     <h1>Lista de Productos</h1>
-    <ul>
+    <h1>Bienvenido {{cookieInfo.userData.username}} {{cookieInfo.userData.lastname}}</h1>
+  <h2>
+{{#if cookieInfo.userData.role }}
+    <h2>Sos admin</h2>
+{{else}}
+
+        <h2>Sos user</h2>
+
+{{/if}}
+
+    <ul> 
         {{#each products}}
         <li>
             <h3>{{this.title}}</h3> 
@@ -27,10 +37,12 @@
             <a href="{{nextLink}}">Siguiente</a>
         {{/if}}
     </div>
-
     <script>
+        
         function addToCart(productId) {
         }
     </script>
 </body>
 </html>
+
+

@@ -100,14 +100,35 @@ class Users {
         }
     }
 
+    // validateUser = async (user, pass) => {
+    //     try {
+    //         // Por ahora una validación muy sencilla, encriptando la clave recibida y comparando usuario y clave
+    //         return await userModel.findOne({ userName: user, password: crypto.createHash('sha256').update(pass).digest('hex')});
+    //     } catch (err) {
+    //         this.status = `validateUser: ${err}`;
+    //     }
+    // }
     validateUser = async (user, pass) => {
         try {
-            // Por ahora una validación muy sencilla, encriptando la clave recibida y comparando usuario y clave
-            return await userModel.findOne({ userName: user, password: crypto.createHash('sha256').update(pass).digest('hex')});
+          const adminEmail = 'adminCoder@coder.com';
+          const adminPassword = 'Manu1234';
+      
+      
+          if (user === adminEmail && pass === adminPassword) {
+            return {
+              role: 'admin',
+            };
+          } else{
+            return {
+                role1: 'user',
+              };
+          }
+      
+          return await userModel.findOne({ userName: user, password: crypto.createHash('sha256').update(pass).digest('hex')});
         } catch (err) {
-            this.status = `validateUser: ${err}`;
+          this.status = `validateUser: ${err}`;
         }
-    }
+      };
 }
 
 export default Users;

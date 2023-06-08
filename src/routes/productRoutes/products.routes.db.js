@@ -1,6 +1,6 @@
 import {Router} from "express";
-import Products from "../managers/products/indexProducts.dbClass.js";
-import productModel from "../managers/products/products.model.js";
+import Products from "../../managers/products/indexProducts.dbClass.js";
+import productModel from "../../managers/products/products.model.js";
 // import routerDb from "./products.routes";
 
 const routerDb = Router();

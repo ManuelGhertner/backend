@@ -1,8 +1,9 @@
 import {} from "dotenv/config";
 import express from "express";
-import routerDb from "./routes/products.routes.db.js";
-import routerDbcarts from "./routes/carts.routes.db.js";
-import routerDbusers from "./routes/users.routes.db.js";
+import routerDb from "./routes/productRoutes/products.routes.db.js";
+import routerDbcarts from "./routes/cartRoutes/carts.routes.db.js";
+import routerDbusers from "./routes/userRoutes/users.routes.db.js";
+import mainRoutes from "./routes/main.routes.js";
 
 // import router from "../src/routes/products.routes.js";
 // import router2 from "../src/routes/carts.routes.js";
@@ -16,13 +17,15 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 // import FileStore from "session-file-store";
 import MongoStore from "connect-mongo";
-import userRoutes from "./routes/users.routes.db.js";
+// import userRoutes from "./routes/users.routes.db.js";
 const PUERTO = parseInt(process.env.PORT) || 3000;
 const MONGOOSE_URL = process.env.MONGOOSE_URL;
 const COOKIE_SECRET = "CODIGOSECRETO";
 const WSPUERTO = 8080;
+const BASE_URL = `http://localhost:${PUERTO}`;
 
 const server = express();
+
 const httpServer = server.listen(WSPUERTO, () => {
   console.log(`Servidor socketio activo en ${WSPUERTO}`);
 });
@@ -51,6 +54,7 @@ server.use(session({
   saveUninitialized: false
 }))
 // server.use("/api", routerDbusers);
+server.use('/', mainRoutes(io, store, BASE_URL));
 server.engine("handlebars", engine());
 server.set("view engine", "handlebars");
 server.set("views", `${__dirname}/views`);
