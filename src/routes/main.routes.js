@@ -2,7 +2,9 @@ import { Router } from "express";
 import Users from "../managers/users/users.dbClass.js";
 import Products from "../managers/products/indexProducts.dbClass.js";
 import productModel from "../managers/products/products.model.js";
+import userModel from "../managers/users/users.model.js";
 import cookieParser from "cookie-parser";
+import { createHash, isValidPassword } from "../utils.js";
 const users = new Users();
 const manager = new Products();
 
@@ -77,6 +79,20 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
         // Se recarga la página base en el browser
         res.redirect(baseUrl);
     });
+
+    router.post('/register', async (req, res) =>{
+        const { firstName, lastName, userName, password} = req.body;
+        if(!firstName || !lastName || !userName || !password) res.status(400).send("Faltan campos obligatorios");
+        const newUser = { firstName: firstName, lastName: lastName, userName: userName, password: createHash(password)};
+        console.log(newUser);   
+        const process = userModel.create(newUser);
+        res.status(200).send(process);
+
+    });
+    router.get('/register', async (req, res) => {
+        res.render('registration', {});
+    });
+
 
     return router;
 }
