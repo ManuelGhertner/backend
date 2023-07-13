@@ -4,7 +4,7 @@ import routerDb from "./routes/productRoutes/products.routes.db.js";
 import routerDbcarts from "./routes/cartRoutes/carts.routes.db.js";
 import routerDbusers from "./routes/userRoutes/users.routes.db.js";
 import mainRoutes from "./routes/main.routes.js";
-
+import viewsRoutes from "./routes/views.router.js";
 // import router from "../src/routes/products.routes.js";
 // import router2 from "../src/routes/carts.routes.js";
 import { __dirname } from "./utils.js";
@@ -17,6 +17,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 // import FileStore from "session-file-store";
 import MongoStore from "connect-mongo";
+import passport from "passport";
 // import userRoutes from "./routes/users.routes.db.js";
 const PUERTO = parseInt(process.env.PORT) || 3000;
 const MONGOOSE_URL = process.env.MONGOOSE_URL;
@@ -52,9 +53,16 @@ server.use(session({
   secret: COOKIE_SECRET,
   resave: false,
   saveUninitialized: false
-}))
+}));
+
+server.use(passport.initialize());
+server.use(passport.session());
+
 // server.use("/api", routerDbusers);
+server.use("/api/sessions", mainRoutes());
 server.use('/', mainRoutes(io, store, BASE_URL));
+server.use('/', viewsRoutes());
+
 server.engine("handlebars", engine());
 server.set("view engine", "handlebars");
 server.set("views", `${__dirname}/views`);

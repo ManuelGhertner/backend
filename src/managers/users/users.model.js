@@ -10,7 +10,7 @@ const schema = new mongoose.Schema({
     userName: { type: String, required: true },
     password: { type: String, required: true },
     gender: { type: String, enum: ['F', 'M'], default: 'M'},
-    role: { type: String, enum: ['user', 'admin'], default: 'user'},
+    role1: { type: String, enum: ['user', 'admin'], default: 'user'}, //verificar roles
     avatar: String
 });
 

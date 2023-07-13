@@ -9,7 +9,7 @@ const createHash = (pass) =>{
 };
 
 const isValidPassword = (userInDb, pass) =>{
-    return bcrypt.compareSync(pass, userInDb, password);
+    return bcrypt.compareSync(pass, userInDb.password);
 };
 
 export { __filename, __dirname, createHash, isValidPassword };
