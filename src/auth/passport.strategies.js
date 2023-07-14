@@ -36,7 +36,8 @@ const initializePassport = () =>{
         const githubData = {
             clientID: 'Iv1.24abb90ecc3ea09c',
             clientSecret: '83cf31439e26fdcd76548cfccf951db2552e246a',
-            callbackUrl: 'http://localhost:3000/api/sessions/githubcallback'
+            callbackUrl: 'http://localhost:3000/api/sessions/githubcallback',
+            // scope: ['user:email'], 
         };
     
         const verifyAuthGithub = async (accessToken, refreshToken, profile, done) => {
@@ -45,15 +46,21 @@ const initializePassport = () =>{
             // de autenticación, con la cual podemos cotejar contra nuestros propios datos
             // y tomar también los que necesitmos para actualizar nuestra bbdd o mostrar.
             try {
-                console.log(profile);
+                // console.log(userName);
+                console.log("profile :", profile);
+                console.log(profile._json.email);
                 const user = await userModel.findOne({ userName: profile._json.email });
-    
+                console.log(user);
+                // console.log("login :", profile._json.login);
                 if (!user) {
                     // const [first, last] = fullName.split(' ');
                     // El callback done es el mecanismo utilizado por passport para retornar
                     // la respuesta de la autenticación
+                    console.log("no hay user");
                     done(null, false);
                 } else {
+                    console.log(" hay user");
+                    console.log(user);
                     done(null, user);
                 }
             } catch (err) {

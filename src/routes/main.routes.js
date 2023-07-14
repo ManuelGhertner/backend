@@ -111,15 +111,15 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
         // res.redirect(baseUrl);
     });
 
-    // router.post('/register', async (req, res) =>{
-    //     const { firstName, lastName, userName, password} = req.body;
-    //     if(!firstName || !lastName || !userName || !password) res.status(400).send("Faltan campos obligatorios");
-    //     const newUser = { firstName: firstName, lastName: lastName, userName: userName, password: createHash(password)};
-    //     console.log(newUser);   
-    //     const process = userModel.create(newUser);
-    //     res.status(200).send(process);
+    router.post('/register', async (req, res) =>{
+        const { firstName, lastName, userName, password} = req.body;
+        if(!firstName || !lastName || !userName || !password) res.status(400).send("Faltan campos obligatorios");
+        const newUser = { firstName: firstName, lastName: lastName, userName: userName, password: createHash(password)};
+        console.log(newUser);   
+        const process = userModel.create(newUser);
+        res.status(200).send(process);
 
-    // });
+    });
     router.get('/regfail', async (req, res) => {
         res.render('registration_err', {});
     });

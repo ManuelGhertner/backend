@@ -59,8 +59,9 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 // server.use("/api", routerDbusers);
-server.use("/api/sessions", mainRoutes());
+
 server.use('/', mainRoutes(io, store, BASE_URL));
+server.use("/api/sessions", mainRoutes());
 server.use('/', viewsRoutes());
 
 server.engine("handlebars", engine());
