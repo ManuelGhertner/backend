@@ -2,6 +2,7 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import GithubStrategy from 'passport-github2';
 import userModel from "../managers/users/users.model.js";
+import { isValidPassword } from '../utils.js';
 
 // Concentramos lo relacionado a Passport en un archivo o directorio de estrategias.
 // En este caso tenemos una llamada authRegistration para verificar que el mail a registrar no exista ya en bbdd
@@ -15,7 +16,7 @@ const initializePassport = () =>{
     
             if (user === null) {
                 // El mail no está registrado, todo ok para seguir
-                return done(null);
+                return done(null, {_id: 0});
             } else {
                 return done(null, false, { message: 'El email ya se encuentra registrado' });
             }
@@ -27,6 +28,63 @@ const initializePassport = () =>{
     passport.use('authRegistration', new LocalStrategy({ usernameField: 'userName', passwordField: 'password' }, verifyAuthRegistration));
     
     
+    const login = async (userName, password, done) => {
+        try {
+          const user = await userModel.findOne({ userName: login_email });
+      
+          if (!user) {
+            // El usuario no existe
+            return done(null, false, { message: 'Usuario no encontrado' });
+          }
+      
+          // Verifica la contraseña del usuario
+          const isValidPassword = await user.isValidPassword(password);
+      
+          if (!isValidPassword) {
+            // Contraseña incorrecta
+            return done(null, false, { message: 'Contraseña incorrecta' });
+          }
+          
+          // Autenticación exitosa
+          return done(null, user);
+          
+        } catch(err) {
+          return done(err);
+        }
+      };
+      
+      passport.use('login', new LocalStrategy(
+        {
+          usernameField: 'userName',
+          passwordField: 'password'
+        },
+        login
+      ));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
         // Estrategia Github
@@ -50,7 +108,6 @@ const initializePassport = () =>{
                 console.log("profile :", profile);
                 console.log(profile._json.email);
                 const user = await userModel.findOne({ userName: profile._json.email });
-                console.log(user);
                 // console.log("login :", profile._json.login);
                 if (!user) {
                     // const [first, last] = fullName.split(' ');

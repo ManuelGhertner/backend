@@ -57,36 +57,79 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
         })
     });
 
-    router.post('/login', async (req, res) => {
-        req.sessionStore.userValidated = false;
-        const { login_email, login_password } = req.body; // Desestructuramos el req.body
+    // router.post('/login', async (req, res) => {
+    //     req.sessionStore.userValidated = false;
+    //     const { login_email, login_password } = req.body; // Desestructuramos el req.body
 
-        const user = await userModel.findOne({ userName: login_email });
+    //     const user = await userModel.findOne({ userName: login_email });
 
-        if (!user) {
-            req.sessionStore.errorMessage = 'No se encuentra el usuario';
-            res.redirect(baseUrl);
-        } else if (!isValidPassword(user, login_password)) {
-            req.sessionStore.errorMessage = 'Clave incorrecta';
-            res.redirect(baseUrl);
-            // res.redirect('http://localhost:3000/ae');
-        } else {
-            req.sessionStore.userValidated =  req.session.userValidated = true;
-            req.sessionStore.errorMessage = '';
-            req.sessionStore.firstName = user.firstName;
-            req.sessionStore.lastName = user.lastName;
-            const userData = {
-                        id: user.id,
-                        username: user.firstName,
-                        lastname: user.lastName,
-                        role: user.role
-                    };
-        res.cookie('userData', userData, { maxAge: 86400000, httpOnly: true });
-        res.redirect(baseUrl);
+    //     if (!user) {
+    //         req.sessionStore.errorMessage = 'No se encuentra el usuario';
+    //         res.redirect(baseUrl);
+    //     } else if (!isValidPassword(user, login_password)) {
+    //         req.sessionStore.errorMessage = 'Clave incorrecta';
+    //         res.redirect(baseUrl);
+    //         // res.redirect('http://localhost:3000/ae');
+    //     } else {
+    //         req.sessionStore.userValidated =  req.session.userValidated = true;
+    //         req.sessionStore.errorMessage = '';
+    //         req.sessionStore.firstName = user.firstName;
+    //         req.sessionStore.lastName = user.lastName;
+    //         const userData = {
+    //                     id: user.id,
+    //                     username: user.firstName,
+    //                     lastname: user.lastName,
+    //                     role: user.role
+    //                 };
+    //     res.cookie('userData', userData, { maxAge: 86400000, httpOnly: true });
+    //     res.redirect(baseUrl);
             
-        }
+    //     }
         
+    // router.post('/login', passport.authenticate('login', {
+    //     successRedirect: baseUrl,
+    //     failureRedirect: "/products",
+    //     // failureFlash: true
+    //   }));
         
+
+    router.post('/login', (req, res, next) => {
+        passport.authenticate('login', (err, user, info) => {
+          if (err) {
+            // Error en la autenticación
+            return next(err);
+          }
+      
+          if (!user) {
+            // Usuario no encontrado o contraseña incorrecta
+            req.sessionStore.errorMessage ="Usuario invalido";
+            return res.redirect(baseUrl);
+          }
+      
+          // Autenticación exitosa
+          req.sessionStore.userValidated = req.session.userValidated = true;
+          req.sessionStore.errorMessage = '';
+          req.sessionStore.firstName = user.firstName;
+          req.sessionStore.lastName = user.lastName;
+      
+          // Continúa con la redirección personalizada
+          return req.logIn(user, (err) => {
+            if (err) {
+              return next(err);
+            }
+      
+            const userData = {
+              id: user.id,
+              username: user.firstName,
+              lastname: user.lastName,
+              role: user.role
+            };
+      
+            res.cookie('userData', userData, { maxAge: 60000, httpOnly: true });
+            return res.redirect(baseUrl); // Redirección personalizada
+          });
+        })(req, res, next);
+      });
         // const { login_email, login_password } = req.body; // Desestructuramos el req.body
         // const user = await users.validateUser(login_email, login_password);
 
@@ -109,17 +152,17 @@ const mainRoutes = (io, store, baseUrl, productsPerPage) => {
 
         // // Se recarga la página base en el browser
         // res.redirect(baseUrl);
-    });
+    // });
 
-    router.post('/register', async (req, res) =>{
-        const { firstName, lastName, userName, password} = req.body;
-        if(!firstName || !lastName || !userName || !password) res.status(400).send("Faltan campos obligatorios");
-        const newUser = { firstName: firstName, lastName: lastName, userName: userName, password: createHash(password)};
-        console.log(newUser);   
-        const process = userModel.create(newUser);
-        res.status(200).send(process);
+    // router.post('/register', async (req, res) =>{
+    //     const { firstName, lastName, userName, password} = req.body;
+    //     if(!firstName || !lastName || !userName || !password) res.status(400).send("Faltan campos obligatorios");
+    //     const newUser = { firstName: firstName, lastName: lastName, userName: userName, password: createHash(password)};
+    //     console.log(newUser);   
+    //     const process = userModel.create(newUser);
+    //     res.status(200).send(process);
 
-    });
+    // });
     router.get('/regfail', async (req, res) => {
         res.render('registration_err', {});
     });
@@ -141,6 +184,7 @@ router.post("/register", passport.authenticate("authRegistration", {failureRedir
 
     router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
         req.session.user = req.user;
+        req.sessionStore.userValidated =  req.session.userValidated = true;
         res.redirect('/');
     });
 
